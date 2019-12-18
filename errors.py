@@ -1,11 +1,14 @@
 errors = {
     'UserAlreadyExistsError': {
         'message': "A user with that username already exists.",
-        'status': 409,
+        'status': 400,
     },
-    '': {
-        'message': "WrongFormatEmailWeakPAssword.",
+    'ResourceDoesNotExist': {
+        'message': "A resource with that ID no longer exists.",
         'status': 410,
         'extra': "Any extra information you want.",
     },
 }
+
+class UserAlreadyExistsError(Exception):
+    pass

@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from models.user_model import UserModel
+from errors import UserAlreadyExistsError
 
 
 class UserRegister(Resource):
@@ -19,8 +20,8 @@ class UserRegister(Resource):
     def post(self):
         data = UserRegister.parser.parse_args()
 
-        if UserModel.find_by_email(data['email']):
-            return {"message": "A user with that email already exists"}, 400
+        if UserModel.find_by_email(data.get('email')):
+            raise UserAlreadyExistsError
 
         user = UserModel(**data)
         user.save()
