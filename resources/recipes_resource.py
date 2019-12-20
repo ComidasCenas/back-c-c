@@ -38,3 +38,8 @@ class Recipe(Resource):
             raise CreatingRecipeError
 
         return recipe.json(), 201
+
+
+class RecipesList(Resource):
+    def get(self):
+        return {'recipes': [recipe.json() for recipe in RecipeModel.query.all()]}

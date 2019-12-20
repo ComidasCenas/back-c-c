@@ -6,7 +6,7 @@ from errors import errors
 from security import authenticate, identity
 from db import db
 from resources.user_resource import UserRegister
-from resources.recipes_resource import Recipe
+from resources.recipes_resource import Recipe, RecipesList
 
 
 app = Flask(__name__)
@@ -25,6 +25,7 @@ jwt = JWT(app, authenticate, identity)
 
 api.add_resource(UserRegister, '/register')
 api.add_resource(Recipe, '/recipe/<string:name>')
+api.add_resource(RecipesList, '/recipes')
 
 
 if __name__ == '__main__':
