@@ -30,4 +30,5 @@ api.add_resource(RecipesList, '/recipes')
 
 if __name__ == '__main__':
     db.init_app(app)
-    app.run(port=5000)
+    # Debug mode should never be used in a production environment!
+    app.run(port=5000, debug=True)
