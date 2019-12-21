@@ -1,7 +1,12 @@
+import json
+import flask
+
 from flask_restful import Resource, reqparse
 
 from models.user_model import UserModel
-from errors import UserAlreadyExistsError
+from controllers.user_creation import user_creation
+from errors import errors
+from entities.messages import Message
 
 
 class UserRegister(Resource):
@@ -19,12 +24,11 @@ class UserRegister(Resource):
                         )
 
     def post(self):
+        # La auth de la app
         data = UserRegister.parser.parse_args()
 
-        if UserModel.find_by_email(data.get('email')):
-            raise UserAlreadyExistsError
-
-        user = UserModel(**data)
-        user.save()
-
-        return {"message": "User created successfully."}, 201
+        # Gestor de errores: logger
+        response = user_creation(**data)
+        flaskResponse = flask.Response(response.body, status=response.status)
+        flaskResponse.headers['Content-Type'] = 'application/json'
+        return flaskResponse

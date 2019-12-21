@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 
 from models.recipe_model import RecipeModel
-from errors import RecipeNotFoundError, RecipeAlreadyExistsError, CreatingRecipeError
+from errors import errors
 
 
 class Recipe(Resource):
