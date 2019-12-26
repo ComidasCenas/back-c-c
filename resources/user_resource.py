@@ -7,10 +7,10 @@ from models.user_model import UserModel
 from controllers.user_creation import user_creation
 from errors import errors
 from entities.messages import Message
+from logs import Logger
 
 
 class UserRegister(Resource):
-
     parser = reqparse.RequestParser()
     parser.add_argument('email',
                         type=str,
@@ -24,6 +24,8 @@ class UserRegister(Resource):
                         )
 
     def post(self):
+        logger = Logger('post::userregister::resouces::flask')
+        logger.debug('Posting user registration')
         # La auth de la app
         data = UserRegister.parser.parse_args()
 
