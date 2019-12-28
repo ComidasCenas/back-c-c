@@ -1,5 +1,6 @@
 from db import db
 
+from logs import Logger
 
 class UserModel(db.Model):
     __tablename__ = 'users'
@@ -13,11 +14,15 @@ class UserModel(db.Model):
         self.password = password
 
     def save(self):
+        logger = Logger('save::usermodel::models::flask')
+        logger.debug('User saved in database')
         db.session.add(self)
         db.session.commit()
 
     @classmethod
     def find_by_email(cls, email):
+        logger = Logger('findbyemail::usermodel::models::flask')
+        logger.debug('Searchin user by email')
         return cls.query.filter_by(email=email).first()
 
     def __repr__(self):

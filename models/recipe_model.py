@@ -1,5 +1,7 @@
 from db import db
 
+from logs import Logger
+
 
 class RecipeModel(db.Model):
     __tablename__ = 'recipes'
@@ -19,12 +21,18 @@ class RecipeModel(db.Model):
 
     @classmethod
     def find_by_name(cls, name):
+        logger = Logger('findbyname::recipemodel::models::flask')
+        logger.debug('Searchin recipe by name')
         return cls.query.filter_by(name=name).first()
 
     def save(self):
+        logger = Logger('save::recipemodel::models::flask')
+        logger.debug('Recipe saved in database')
         db.session.add(self)
         db.session.commit()
 
     def delete(self):
+        logger = Logger('delete::usermodel::models::flask')
+        logger.debug('Recipe deleted from database')
         db.session.delete(self)
         db.session.commit()
