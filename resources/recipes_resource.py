@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 
 from models.recipe_model import RecipeModel
-from errors import errors
+from errors.recipe_errors import recipe_errors
 from logs import Logger
 
 

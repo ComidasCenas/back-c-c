@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from flask_jwt import JWT
-from errors import errors
+from errors.user_errors import user_errors
 
 from security import authenticate, identity
 from db import db
@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'marramiau'
-api = Api(app, errors=errors)
+api = Api(app, errors=user_errors)
 
 
 @app.before_first_request

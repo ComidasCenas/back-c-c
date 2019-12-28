@@ -1,4 +1,4 @@
-errors = {
+recipe_errors = {
     'RecipeNotFoundError': {
         'message': 'There is no recipe with that name.',
         'status': 404
@@ -17,9 +17,10 @@ errors = {
 class RecipeNotFoundError(Exception):
     pass
 
+
 class RecipeAlreadyExistsError(Exception):
     pass
 
+
 class CreatingRecipeError(Exception):
     pass
-
