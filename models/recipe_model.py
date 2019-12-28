@@ -22,7 +22,7 @@ class RecipeModel(db.Model):
     @classmethod
     def find_by_name(cls, name):
         logger = Logger('findbyname::recipemodel::models::flask')
-        logger.debug('Searchin recipe by name')
+        logger.debug('Searching recipe by name')
         return cls.query.filter_by(name=name).first()
 
     def save(self):
@@ -36,3 +36,9 @@ class RecipeModel(db.Model):
         logger.debug('Recipe deleted from database')
         db.session.delete(self)
         db.session.commit()
+
+    @classmethod
+    def get_recipes_list(cls):
+        logger = Logger('find_all::recipemodel::models::flask')
+        logger.debug('Recipes list returned')
+        return cls.query.all()

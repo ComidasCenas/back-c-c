@@ -1,5 +1,10 @@
+import flask
+
 from flask_restful import Resource, reqparse
 
+from controllers.recipe_list_reading import recipe_list_reading
+from controllers.recipe_reading import recipe_reading
+from controllers.recipe_creation import recipe_creation
 from models.recipe_model import RecipeModel
 from errors.recipe_errors import recipe_errors
 from logs import Logger
@@ -21,32 +26,23 @@ class Recipe(Resource):
     def get(self, name):
         logger = Logger('get::recipe::resouces::flask')
         logger.debug('Starting recipe query')
-        recipe = RecipeModel.find_by_name(name)
-        if not recipe:
-            raise RecipeNotFoundError
-
-        return recipe.json()
+        response = recipe_reading(name)
+        return response
 
     def post(self, name):
         logger = Logger('post::recipe::resources::flask')
         logger.debug('Starting recipe posting')
-        # if RecipeModel.find_by_name(name):
-        #     raise RecipeAlreadyExistsError
 
         data = Recipe.parser.parse_args()
 
-        recipe = RecipeModel(name, **data)
-
-        try:
-            recipe.save()
-        except:
-            raise CreatingRecipeError
-
-        return recipe.json(), 201
+        response = recipe_creation(name, **data)
+        flaskResponse = flask.Response(response.body, status=response.status)
+        flaskResponse.headers['Content-Type'] = 'application/json'
+        return flaskResponse
 
 
 class RecipesList(Resource):
     def get(self):
         logger = Logger('get::recipeslist::resources::flask')
         logger.debug('Starting recipes list query')
-        return {'recipes': [recipe.json() for recipe in RecipeModel.query.all()]}
+        recipe_list_reading()

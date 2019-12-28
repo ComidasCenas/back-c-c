@@ -13,5 +13,5 @@ class ErrorResponse():
         self.error = type_errors_dic[domain][type_error]['message']
         self.code = type_errors_dic[domain][type_error]['status']
 
-    def toJson(self):
+    def to_json(self):
         return json.dumps(self.__dict__, indent=4, sort_keys=True)

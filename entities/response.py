@@ -6,5 +6,5 @@ class Response():
         self.status = status
         self.body = body
 
-    def toJson(self):
+    def to_json(self):
         return json.dumps(self.__dict__, indent=4, sort_keys=True)
