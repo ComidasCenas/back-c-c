@@ -16,9 +16,6 @@ class RecipeModel(db.Model):
         self.ingredients = ingredients
         self.instructions = instructions
 
-    def json(self):
-        return {'name': self.name, 'ingredients': self.ingredients, 'instructions': self.instructions}
-
     @classmethod
     def find_by_name(cls, name):
         logger = Logger('findbyname::recipemodel::models::flask')

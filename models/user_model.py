@@ -2,6 +2,7 @@ from db import db
 
 from logs import Logger
 
+
 class UserModel(db.Model):
     __tablename__ = 'users'
 
@@ -24,6 +25,3 @@ class UserModel(db.Model):
         logger = Logger('findbyemail::usermodel::models::flask')
         logger.debug('Searchin user by email')
         return cls.query.filter_by(email=email).first()
-
-    def __repr__(self):
-        return f'User: {self.email}'

@@ -1,7 +1,15 @@
 recipe_errors = {
+    'RecipeSuccessfullyFound': {
+        'message': 'The recipe has been found successfully',
+        'status': 200
+    },
     'RecipeCreationSuccess': {
-        'message': 'The recipe has been crated successfully',
+        'message': 'The recipe has been created successfully',
         'status': 201
+    },
+    'NotCorrectFormatError': {
+        'message': 'Name, ingredients or instructions have an incorrect format',
+        'status': 400
     },
     'RecipeNotFoundError': {
         'message': 'There is no recipe with that name.',
@@ -38,5 +46,13 @@ class RecipeCreationSuccess(Exception):
     pass
 
 
+class RecipeSuccessfullyFound(Exception):
+    pass
+
+
 class GettingRecipesListError(Exception):
+    pass
+
+
+class NotCorrectFormatError(Exception):
     pass
