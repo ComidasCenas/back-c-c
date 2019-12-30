@@ -8,13 +8,26 @@ class RecipeModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
-    ingredients = db.Column(db.String(100))
     instructions = db.Column(db.String(300))
+    photo = db.Column(db.BLOB)
+    recipes_related = db.relationship(
+        'RecipeModel',
+        backref='related_recipes',
+        lazy='dynamic'
+    )
+    ingredients = db.relationship(
+        'IngredientsRecipesModel',
+        backref='recipe',
+        lazy='dynamic'
+    )
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, name, ingredients, instructions):
+    def __init__(self, name, instructions, user_id, photo, recipes_related=[]):
         self.name = name
-        self.ingredients = ingredients
         self.instructions = instructions
+        self.user_id = user_id
+        self.photo = photo
+        self.recipes_related = []
 
     @classmethod
     def find_by_name(cls, name):
