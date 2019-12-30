@@ -7,6 +7,7 @@ from security import authenticate, identity
 from db import db
 from resources.user_resource import UserRegister
 from resources.recipes_resource import Recipe, RecipesList
+from flask_migrate import Migrate
 from logs import Logger
 
 logger = Logger('app::flask')
@@ -18,13 +19,9 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ['DB_PATH']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = environ['APP_SECRET_KEY']
+
+migrate = Migrate(app, db)
 api = Api(app)
-
-
-@app.before_first_request
-def create_tables():
-    logger.debug('Creating database')
-    db.create_all()
 
 
 logger.debug('Instantiation JWT')
