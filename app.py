@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Resource, Api
 from flask_jwt import JWT
-from errors import errors
+from os import environ
 
 from security import authenticate, identity
 from db import db
@@ -12,11 +12,13 @@ from logs import Logger
 logger = Logger('app::flask')
 logger.info('Starting app')
 
+app_port = environ['APP_PORT']
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = environ['DB_PATH']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'marramiau'
-api = Api(app, errors=errors)
+app.secret_key = environ['APP_SECRET_KEY']
+api = Api(app)
 
 
 @app.before_first_request
@@ -37,4 +39,4 @@ api.add_resource(RecipesList, '/recipes')
 if __name__ == '__main__':
     db.init_app(app)
     # Debug mode should never be used in a production environment!
-    app.run(port=5000, debug=True)
+    app.run(port=app_port, debug=True)
