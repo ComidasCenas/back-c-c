@@ -21,20 +21,32 @@ class Recipe(Resource):
         logger = Logger('get::recipe::resouces::flask')
         logger.debug('Starting recipe query')
         recipe = RecipeModel.find_by_name(name)
-        if not recipe:
-            raise RecipeNotFoundError
+        # No devolvemos un objeto json, devolvemos una respuesta Flask porque
+        # todavia no sabemos si la logica de negocio (el controlador) ha fallado
+        # y con que codigo ha fallado. En los recursos no se realiza tratamiento
+        # de errores
+        # if not recipe:
+        #     raise RecipeNotFoundError
 
-        return recipe.json()
+        # return recipe.json()
+        return null
 
     def post(self, name):
         logger = Logger('post::recipe::resources::flask')
         logger.debug('Starting recipe posting')
 
-        data = Recipe.parser.parse_args()
+        # NO ACOPLAMOS EL ENRUTADO CON EL MODELO
+        # Todo tratamiento require del controlador que es el encargado de implementar
+        # la logica de negocio. Devolvemos siempre un FlaskResponse con un status y un body
+        # El contenido del FlaskResponse lo decide el controlador
 
-        recipe = RecipeModel(name, **data)
+        # data = Recipe.parser.parse_args()
 
-        return recipe.json(), 201
+        # recipe = RecipeModel(name, **data)
+
+        # return recipe.json(), 201
+
+        return null
 
 
 class RecipesList(Resource):
