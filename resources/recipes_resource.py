@@ -1,7 +1,6 @@
 from flask_restful import Resource, reqparse
 
 from models.recipe_model import RecipeModel
-from errors.recipe_errors import recipe_errors
 from logs import Logger
 
 
@@ -30,17 +29,10 @@ class Recipe(Resource):
     def post(self, name):
         logger = Logger('post::recipe::resources::flask')
         logger.debug('Starting recipe posting')
-        # if RecipeModel.find_by_name(name):
-        #     raise RecipeAlreadyExistsError
 
         data = Recipe.parser.parse_args()
 
         recipe = RecipeModel(name, **data)
-
-        try:
-            recipe.save()
-        except:
-            raise CreatingRecipeError
 
         return recipe.json(), 201
 
@@ -49,4 +41,8 @@ class RecipesList(Resource):
     def get(self):
         logger = Logger('get::recipeslist::resources::flask')
         logger.debug('Starting recipes list query')
-        return {'recipes': [recipe.json() for recipe in RecipeModel.query.all()]}
+        return {
+            'recipes': [
+                recipe.json() for recipe in RecipeModel.query.all()
+            ]
+        }

@@ -6,4 +6,5 @@ export DB_PATH="sqlite:///data.db"
 export APP_PORT=5000
 export APP_SECRET_KEY="marramiau"
 
-python app.py
+flask db migrate
+flask db upgrade
