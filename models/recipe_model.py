@@ -9,6 +9,7 @@ class RecipeModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     instructions = db.Column(db.String(300))
+    photo = db.Column(db.BLOB)
     recipes_related = db.relationship(
         'RecipeModel',
         backref='related_recipes',
@@ -21,10 +22,11 @@ class RecipeModel(db.Model):
     )
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, name, instructions, user_id, recipes_related=[]):
+    def __init__(self, name, instructions, user_id, photo, recipes_related=[]):
         self.name = name
         self.instructions = instructions
         self.user_id = user_id
+        self.photo = photo
         self.recipes_related = []
 
     @classmethod
