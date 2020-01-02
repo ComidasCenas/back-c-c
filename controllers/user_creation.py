@@ -28,14 +28,14 @@ def user_creation(email, password):
             Message(user_errors['UserCreationSuccess']['message']).toJson()
         )
     except UserAlreadyExistsError:
-        errorResponse = ErrorResponse('UserAlreadyExistsError')
+        error_response = ErrorResponse('UserAlreadyExistsError', user)
         logger.warning('User already exists')
-        return Response(errorResponse.code, errorResponse.toJson())
+        return Response(error_response.code, error_response.toJson())
     except NotCorrectFormatError:
-        errorResponse = ErrorResponse('NotCorrectFormatError')
+        error_response = ErrorResponse('NotCorrectFormatError', user)
         logger.error('Incorrect format')
-        return Response(errorResponse.code, errorResponse.toJson())
+        return Response(error_response.code, error_response.toJson())
     except Exception:
-        errorResponse = ErrorResponse('CreatingUserError')
+        error_response = ErrorResponse('CreatingUserError', user)
         logger.error('Database error')
-        return Response(errorResponse.code, errorResponse.toJson())
+        return Response(error_response.code, error_response.toJson())

@@ -1,7 +1,10 @@
+import flask
+
 from flask_restful import Resource, reqparse
 
-from models.recipe_model import RecipeModel
+from controllers.recipes_creation import recipes_creation
 from logs import Logger
+from models.recipe_model import RecipeModel
 
 
 class Recipe(Resource):
@@ -20,7 +23,7 @@ class Recipe(Resource):
     def get(self, name):
         logger = Logger('get::recipe::resouces::flask')
         logger.debug('Starting recipe query')
-        recipe = RecipeModel.find_by_name(name)
+        #recipe = RecipeModel.find_by_name(name)
         # No devolvemos un objeto json, devolvemos una respuesta Flask porque
         # todavia no sabemos si la logica de negocio (el controlador) ha fallado
         # y con que codigo ha fallado. En los recursos no se realiza tratamiento
@@ -29,24 +32,18 @@ class Recipe(Resource):
         #     raise RecipeNotFoundError
 
         # return recipe.json()
-        return null
+        return None
 
     def post(self, name):
         logger = Logger('post::recipe::resources::flask')
         logger.debug('Starting recipe posting')
 
-        # NO ACOPLAMOS EL ENRUTADO CON EL MODELO
-        # Todo tratamiento require del controlador que es el encargado de implementar
-        # la logica de negocio. Devolvemos siempre un FlaskResponse con un status y un body
-        # El contenido del FlaskResponse lo decide el controlador
+        data = Recipe.parser.parse_args()
 
-        # data = Recipe.parser.parse_args()
-
-        # recipe = RecipeModel(name, **data)
-
-        # return recipe.json(), 201
-
-        return null
+        response = recipes_creation(**data)
+        flaskResponse = flask.Response(response.body, status=response.status)
+        flaskResponse.headers['Content-Type'] = 'application/json'
+        return flaskResponse
 
 
 class RecipesList(Resource):
