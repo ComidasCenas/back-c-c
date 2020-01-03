@@ -5,7 +5,8 @@ from logs import Logger
 class IngredientsModel(db.Model):
     __tablename__ = 'ingredients'
 
-    name = db.Column(db.String(30), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
     in_recipes = db.relationship(
         'IngredientsRecipesModel',
         backref='ingredient_for_recipe',

@@ -1,5 +1,4 @@
 from entities.error_response import ErrorResponse
-from entities.ingredient_entity import Ingredient
 from entities.ingredient_recipe import IngredientRecipe
 from entities.messages import Message
 from entities.recipe_entity import Recipe
@@ -24,26 +23,27 @@ def recipes_creation(recipe_request):
     logger.debug('Creating recipe')
     try:
 
-        recipe = Recipe(**recipe_request)
+        recipe_entity = Recipe(recipe_request)
 
-        if not recipe_facade.recipe_creation_validation(recipe):
+        if not recipe_facade.recipe_creation_validation(recipe_entity):
             raise NotCorrectFormatError
 
-        for related_recipe in recipe.recipes_related:
+        for related_recipe in recipe_entity.recipes_related:
             if not RecipeModel.find_by_name(related_recipe):
                 raise RecipeDoesNotExist
 
-        for ingredient in recipe.ingredients:
-            if ingredient not in IngredientsModel.find_by_name(ingredient):
-                ingredient = IngredientsModel(recipe.name)
-                ingredient.save()
+        for ingredient in recipe_entity.ingredients:
+            ingredient_model = IngredientsModel.find_by_name(ingredient.name)
+            if not ingredient_model:
+                ingredient_model = IngredientsModel(ingredient.name)
+                ingredient_model.save()
 
-        recipe = RecipeModel(**recipe_request)
-        recipe.save()
+        recipe_model = RecipeModel(**recipe_request)
+        recipe_model.save()
 
-        for ingredient in recipe.ingredients:
+        for ingredient in recipe_entity.ingredients:
             ingredient_recipe = IngredientsRecipesModel(
-                ingredient.quantity, recipe.id, ingredient)
+                ingredient.quantity, recipe_entity.id, ingredient.name)
             ingredient_recipe.save()
 
         return Response(
@@ -52,11 +52,11 @@ def recipes_creation(recipe_request):
         )
 
     except NotCorrectFormatError:
-        error_response = ErrorResponse('NotCorrectFormatError', recipe)
+        error_response = ErrorResponse('NotCorrectFormatError', 'recipe')
         logger.warning('The recipe has not a correct format')
         return Response(error_response.code, error_response.toJson())
     except Exception:
-        error_response = ErrorResponse('CreatingRecipeError', recipe)
+        error_response = ErrorResponse('CreatingRecipeError', 'recipe')
         logger.error('Database error')
         return Response(error_response.code, error_response.toJson())
 

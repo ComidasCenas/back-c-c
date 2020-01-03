@@ -10,9 +10,14 @@ class RecipeModel(db.Model):
     name = db.Column(db.String(30))
     instructions = db.Column(db.String(300))
     photo = db.Column(db.BLOB)
-    recipes_related = db.relationship(
-        'RecipeModel',
-        backref='related_recipes',
+    child_recipes = db.relationship(
+        'RecipeRelatedModel',
+        backref='parents',
+        lazy='dynamic'
+    )
+    parent_recipes = db.relationship(
+        'RecipeRelatedModel',
+        backref='children',
         lazy='dynamic'
     )
     ingredients = db.relationship(
