@@ -1,4 +1,4 @@
-class Ingredient():
-    def __init__(self, name, in_recipe):
+class IngredientEntity():
+    def __init__(self, name, quantity):
         self.name = name
-        self.in_recipe = in_recipe
+        self.quantity = quantity
