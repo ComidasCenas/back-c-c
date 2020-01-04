@@ -11,15 +11,16 @@ class RecipeModel(db.Model):
     instructions = db.Column(db.String(300))
     photo = db.Column(db.BLOB)
     child_recipes = db.relationship(
-        'RecipeRelatedModel',
-        backref='parents',
+        'RecipeModel',
+        remote_side=[id],
+        backref='related_recipe',
         lazy='dynamic'
     )
-    parent_recipes = db.relationship(
-        'RecipeRelatedModel',
-        backref='children',
-        lazy='dynamic'
-    )
+    # parent_recipes = db.relationship(
+    #     'RecipeRelatedModel',
+    #     backref='children',
+    #     lazy='dynamic'
+    # )
     ingredients = db.relationship(
         'IngredientsRecipesModel',
         backref='recipe',
