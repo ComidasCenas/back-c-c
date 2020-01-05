@@ -2,15 +2,6 @@ from db import db
 
 from logs import Logger
 
-ingredient_recipe = db.Table(
-    'ingredient_of_recipe',
-    Base.metadata,
-    db.Column('ingredient_recipe_id', db.Integer, primary_key=True),
-    db.Column('ingredient_name', db.Integer, db.ForeignKey(
-        'ingredientsrecipes.id')),
-    db.Column('recipe_id', db.Integer, db.ForeignKey(ingredientsrecipes.id))
-)
-
 
 class IngredientsRecipesModel(db.Model):
     __tablename__ = 'ingredientsrecipes'
@@ -25,13 +16,6 @@ class IngredientsRecipesModel(db.Model):
         db.String(30),
         db.ForeignKey('ingredients.id')
     )
-
-    recipes = db.Relationship(
-        'ingredientsrecipes',
-        secondary=ingredient_recipe,
-        primaryjoin=recipe_id == ingredient_recipe.c.recipe_id
-        secondaryjoin=recipe_id == ingredient_recipe.c.ingredient_name
-        backref='recipe')
 
     def __init__(self, quantity, recipe, ingredient):
         self.quantity = quantity

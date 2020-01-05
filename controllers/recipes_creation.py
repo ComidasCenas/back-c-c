@@ -18,7 +18,7 @@ from models.recipe_model import RecipeModel
 # Error 403: El token ha caducado
 
 
-def recipes_creation(recipe_request):
+def recipes_creation(recipe_request, user_id):
     logger = Logger('recipe_creation::controller::flask')
     logger.debug('Creating recipe')
     try:
@@ -38,7 +38,7 @@ def recipes_creation(recipe_request):
                 ingredient_model = IngredientsModel(ingredient.name)
                 ingredient_model.save()
 
-        recipe_model = RecipeModel(**recipe_request)
+        recipe_model = RecipeModel(recipe_entity)
         recipe_model.save()
 
         for ingredient in recipe_entity.ingredients:
