@@ -18,7 +18,7 @@ from models.recipe_model import RecipeModel
 # Error 403: El token ha caducado
 
 
-def recipes_creation(recipe_request):
+def recipes_creation(recipe_request, user_id):
     logger = Logger('recipe_creation::controller::flask')
     logger.debug('Creating recipe')
     try:
@@ -38,7 +38,7 @@ def recipes_creation(recipe_request):
                 ingredient_model = IngredientsModel(ingredient.name)
                 ingredient_model.save()
 
-        recipe_model = RecipeModel(**recipe_request)
+        recipe_model = RecipeModel(recipe_entity)
         recipe_model.save()
 
         for ingredient in recipe_entity.ingredients:
@@ -60,19 +60,19 @@ def recipes_creation(recipe_request):
         logger.error('Database error')
         return Response(error_response.code, error_response.toJson())
 
-        # 1. Comprobar si los datos de la receta son validos (hay que crear un
-        # facade)
+        # 1. Comprobar si los datos de la receta son validos (hay que crear
+        # un facade)
         #   1.1 El nombre de receta debe de estar informado
         #   1.2 Debe de tener al menos un igrediente
         #   1.3 Los pasos de la receta deben de estar informados
         #   1.4 La foto debe de estar informada
         # 2. Hay que comprobar la coherencia de las relaciones en base de datos
         #   2.1 Si la receta tiene recetas relacionadas hay que comprobar que
-        #   dichas recetas existen ya
+        # dichas recetas existen ya
         # 3. Hay que dar de alta los ingredientes
         #   3.1 Comprobar si los ingredientes existen en base de datos y si no
-        #   existen crearlos
+        # existen crearlos
         # 4. Hay que salvar la receta en base de datos
         # 5. Hay que salvar la relación entre los ingredientes y la receta
-        #    mediante el modelo
+        # mediante el modelo
         #    IngredientsRecipesModel añadiendo la cantidad de cada ingrediente

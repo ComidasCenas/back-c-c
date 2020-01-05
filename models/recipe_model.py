@@ -10,16 +10,14 @@ class RecipeModel(db.Model):
     name = db.Column(db.String(30))
     instructions = db.Column(db.String(300))
     photo = db.Column(db.BLOB)
+    recipe_child = db.Column(db.Integer, db.ForeignKey('recipes.id'))
     child_recipes = db.relationship(
-        'RecipeRelatedModel',
-        backref='parents',
-        lazy='dynamic'
+        'RecipeModel',
+        remote_side=[id],
+        backref='related_recipe',
+        uselist=False
     )
-    parent_recipes = db.relationship(
-        'RecipeRelatedModel',
-        backref='children',
-        lazy='dynamic'
-    )
+
     ingredients = db.relationship(
         'IngredientsRecipesModel',
         backref='recipe',
@@ -27,12 +25,11 @@ class RecipeModel(db.Model):
     )
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, name, instructions, user_id, photo, recipes_related=[]):
-        self.name = name
-        self.instructions = instructions
-        self.user_id = user_id
-        self.photo = photo
-        self.recipes_related = []
+    def __init__(self, recipe_entity):
+        self.name = recipe_entity.name
+        self.instructions = recipe_entity.instructions
+        self.user_id = recipe_entity.user_id
+        self.photo = recipe_entity.photo
 
     @classmethod
     def find_by_name(cls, name):

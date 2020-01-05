@@ -32,8 +32,8 @@ api.add_resource(UserRegister, '/register')
 api.add_resource(Recipe, '/recipe/<string:name>')
 api.add_resource(RecipesList, '/recipes')
 
+db.init_app(app)
 
 if __name__ == '__main__':
-    db.init_app(app)
     # Debug mode should never be used in a production environment!
     app.run(port=app_port, debug=True)
