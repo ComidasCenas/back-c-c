@@ -15,9 +15,10 @@ class UserModel(db.Model):
         lazy='dynamic'
     )
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, recipes=None):
         self.email = email
         self.password = password
+        self.recipes = recipes
 
     def save(self):
         logger = Logger('save::usermodel::models::flask')
@@ -30,6 +31,16 @@ class UserModel(db.Model):
         logger = Logger('findbyemail::usermodel::models::flask')
         logger.debug('Searchin user by email')
         return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def find_by_id(cls, user_id):
+        logger = Logger('findbyid::usermodel::models::flask')
+        logger.debug('Searchin user by id')
+        return cls.query.filter_by(user_id=user_id).first()
+
+    def delete_user(self):
+        db.session.delete(self)
+        db.session.commit()
 
     def __repr__(self):
         return f'User: {self.email}'
