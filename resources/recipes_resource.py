@@ -1,7 +1,10 @@
+import flask
+
 from flask_restful import Resource, reqparse
 
-from models.recipe_model import RecipeModel
+from controllers.recipes_creation import recipes_creation
 from logs import Logger
+from models.recipe_model import RecipeModel
 
 
 class Recipe(Resource):
@@ -20,24 +23,22 @@ class Recipe(Resource):
     def get(self, name):
         logger = Logger('get::recipe::resouces::flask')
         logger.debug('Starting recipe query')
-        recipe = RecipeModel.find_by_name(name)
-        if not recipe:
-            raise RecipeNotFoundError
+        # ecipe = RecipeModel.find_by_name(name)
+        # No devolvemos un objeto json, devolvemos una respuesta Flask porque
+        # todavia no sabemos si la logica de negocio (el controlador) ha
+        # fallado
+        # y con que codigo ha fallado. En los recursos no se realiza
+        # tratamiento
+        # de errores
+        # if not recipe:
+        #     raise RecipeNotFoundError
 
-        return recipe.json()
-
-    def post(self, name):
-        logger = Logger('post::recipe::resources::flask')
-        logger.debug('Starting recipe posting')
-
-        data = Recipe.parser.parse_args()
-
-        recipe = RecipeModel(name, **data)
-
-        return recipe.json(), 201
+        # return recipe.json()
+        return None
 
 
 class RecipesList(Resource):
+
     def get(self):
         logger = Logger('get::recipeslist::resources::flask')
         logger.debug('Starting recipes list query')
@@ -46,3 +47,13 @@ class RecipesList(Resource):
                 recipe.json() for recipe in RecipeModel.query.all()
             ]
         }
+
+    def post(self):
+        logger = Logger('post::recipe::resources::flask')
+        logger.debug('Starting recipe posting')
+
+        data = flask.request.json
+        response = recipes_creation(data)
+        flaskResponse = flask.Response(response.body, status=response.status)
+        flaskResponse.headers['Content-Type'] = 'application/json'
+        return flaskResponse
