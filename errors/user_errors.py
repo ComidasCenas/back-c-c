@@ -7,6 +7,10 @@ user_errors = {
         'message': 'The email or the password has an incorrect format.',
         'status': 400
     },
+    'UserNotFoundError': {
+        'message': 'The id does not match any user',
+        'status': 404
+    },
     'UserAlreadyExistsError':  {
         'message': 'A user with that email already exists.',
         'status': 409
@@ -27,4 +31,12 @@ class UserAlreadyExistsError(Exception):
 
 
 class CreatingUserError(Exception):
+    pass
+
+
+class UserCreationSuccess(Exception):
+    pass
+
+
+class UserNotFoundError(Exception):
     pass
