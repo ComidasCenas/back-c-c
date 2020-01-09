@@ -1,15 +1,17 @@
-from flask import Flask
-from flask_restful import Resource, Api
-from flask_jwt import JWT
-from errors.user_errors import user_errors
 from os import environ
 
-from security import authenticate, identity
-from db import db
-from resources.user_resource import UserRegister, User
-from resources.recipes_resource import Recipe, RecipesList
+from flask import Flask
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
+from flask_restful import Resource, Api
+
+
+from db import db
+from errors.user_errors import user_errors
 from logs import Logger
+from resources.recipes_resource import Recipe, RecipesList
+from resources.user_resource import UserRegister, UserFinder, UserLogin
+
 
 logger = Logger('app::flask')
 logger.info('Starting app')
@@ -27,11 +29,13 @@ api = Api(app)
 
 
 logger.debug('Instantiation JWT')
-jwt = JWT(app, authenticate, identity)
+
+jwt = JWTManager(app)
 
 logger.debug('Creating routes')
 api.add_resource(UserRegister, '/register')
-api.add_resource(User, '/user/<int:user_id>')
+api.add_resource(UserLogin, '/login')  # previous /auth
+api.add_resource(UserFinder, '/user/<int:user_id>')
 api.add_resource(Recipe, '/recipe/<string:name>')
 api.add_resource(RecipesList, '/recipes')
 
