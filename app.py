@@ -10,7 +10,7 @@ from db import db
 from errors.user_errors import user_errors
 from logs import Logger
 from resources.recipes_resource import Recipe, RecipesList
-from resources.user_resource import UserRegister, UserFinder, UserLogin
+from resources.user_resource import UserRegister, UserFinder, UserLogin, TokenRefresh
 
 
 logger = Logger('app::flask')
@@ -38,6 +38,7 @@ api.add_resource(UserLogin, '/login')  # previous /auth
 api.add_resource(UserFinder, '/user/<int:user_id>')
 api.add_resource(Recipe, '/recipe/<string:name>')
 api.add_resource(RecipesList, '/recipes')
+api.add_resource(TokenRefresh, '/refresh')
 
 db.init_app(app)
 
