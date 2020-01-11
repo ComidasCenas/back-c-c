@@ -34,10 +34,12 @@ class UserModel(db.Model):
     @classmethod
     def find_by_id(cls, user_id):
         logger = Logger('findbyid::usermodel::models::flask')
-        logger.debug('Searchin user by id')
+        logger.debug('Searching user by id')
         return cls.query.filter_by(id=user_id).first()
 
     def delete_user(self):
+        logger = Logger('deleteuser::usermodel::models::flask')
+        logger.debug('Deleting item')
         db.session.delete(self)
         db.session.commit()
 
