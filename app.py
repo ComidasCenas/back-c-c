@@ -9,8 +9,9 @@ from flask_restful import Resource, Api
 from db import db
 from errors.user_errors import user_errors
 from logs import Logger
+from resources.auth_resource import UserLogin, TokenRefresh
 from resources.recipes_resource import Recipe, RecipesList
-from resources.user_resource import UserRegister, UserFinder, UserLogin, TokenRefresh
+from resources.user_resource import UserRegister, UserFinder
 
 
 logger = Logger('app::flask')
