@@ -34,7 +34,7 @@ logger.debug('Instantiation JWT')
 jwt = JWTManager(app)
 
 logger.debug('Creating routes')
-api.add_resource(UserRegister, '/register')
+api.add_resource(UserRegister, '/user')
 api.add_resource(UserLogin, '/login')  # previous /auth
 api.add_resource(UserFinder, '/user/<int:user_id>')
 api.add_resource(Recipe, '/recipe/<string:name>')
