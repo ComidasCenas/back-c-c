@@ -1,6 +1,8 @@
 from entities.ingredient_entity import IngredientEntity
+from helpers.serializable_decorator import serializable
 
 
+@serializable
 class Recipe():
     def __init__(self, recipe_post, user_id):
         self.name = recipe_post['name']
