@@ -44,8 +44,9 @@ class UserFinder(Resource):
         logger.debug('Getting user by id')
 
         response = get_user_by_id(user_id)
-        # flaskResponse = flask.Response(response.body, status=response.status)
-        return response
+        flaskResponse = flask.Response(response.body, status=response.status)
+        flaskResponse.headers['Content-Type'] = 'application/json'
+        return flaskResponse
 
     @classmethod
     def delete(cls, user_id):

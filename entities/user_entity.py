@@ -1,11 +1,11 @@
+import json
+
+
 class User():
-    def __init__(self, email, password, user_id=None):
+    def __init__(self, email, user_id=None, password=None):
         self.user_id = user_id
         self.email = email
         self.password = password
 
     def to_json(self):
-        return {
-            'user_id': self.user_id,
-            'email': self.email
-        }
+        return json.dumps(self.__dict__, indent=4, sort_keys=True)

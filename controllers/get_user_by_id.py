@@ -19,17 +19,23 @@ def get_user_by_id(user_id):
         user = UserModel.find_by_id(user_id)
         if not user:
             raise UserNotFoundError
-        user_entity = User(user.email, user.password)
-        # return Response(
-        #     user_errors['UserFoundSucces']['status'],
-        #     Message(
-        #         f'user_id: {user_entity.id}, user_email: {user_entity.email} ')
-        # )
-        # # ¿Entidad?
+        user_entity = User(user.email, user.id)
 
+        return Response(
+            user_errors['UserFoundSucces']['status'],
+            user_entity.to_json()
+        )
     except UserNotFoundError:
         error_response = ErrorResponse('UserNotFoundError', 'user')
         logger.warning(f'The user with id {user_id} has not been found')
+        return Response(
+            user_errors['UserNotFoundError']['status'],
+            Message(user_errors['UserNotFoundError']['message'])
+        )
     except GettingUserError:
         error_response = ErrorResponse('GettingUserError', 'user')
         logger.warning('There was an error while getting the user')
+        return Response(
+            user_errors['CreatingUserError']['status'],
+            Message(user_errors['CreatingUserError']['message']).toJson()
+        )
