@@ -4,9 +4,11 @@ from entities.messages import Message
 from entities.recipe_entity import Recipe
 from entities.response import Response
 from errors.recipe_errors import recipe_errors
-from errors.recipe_errors import (RecipeDoesNotExist,
-                                  NotCorrectFormatError,
-                                  RecipeCreationSuccess)
+from errors.recipe_errors import (
+    CreatingRecipeError,
+    RecipeDoesNotExist,
+    NotCorrectFormatError,
+    RecipeCreationSuccess)
 from facades.recipe_facade import recipe_facade
 from logs import Logger
 from models.ingredients_model import IngredientsModel
@@ -55,7 +57,7 @@ def recipes_creation(recipe_request, user_id):
         error_response = ErrorResponse('NotCorrectFormatError', 'recipe')
         logger.warning('The recipe has not a correct format')
         return Response(error_response.code, error_response.toJson())
-    except Exception:
+    except CreatingRecipeError:
         error_response = ErrorResponse('CreatingRecipeError', 'recipe')
         logger.error('Database error')
         return Response(error_response.code, error_response.toJson())

@@ -4,6 +4,7 @@ import flask
 from flask_jwt_extended import jwt_required
 from flask_restful import Resource, reqparse
 
+from controllers.get_user_by_id import get_user_by_id
 from controllers.user_creation import user_creation
 from entities.user_entity import User
 from logs import Logger
@@ -39,10 +40,12 @@ class UserFinder(Resource):
     @classmethod
     @jwt_required
     def get(cls, user_id):
-        user = UserModel.find_by_id(user_id)
-        if not user:
-            return {'message': 'User not found'}, 404
-        return {'message': 'User found'}, 200
+        logger = Logger('get::userfinderbyid::resources::flask')
+        logger.debug('Getting user by id')
+
+        response = get_user_by_id(user_id)
+        # flaskResponse = flask.Response(response.body, status=response.status)
+        return response
 
     @classmethod
     def delete(cls, user_id):
