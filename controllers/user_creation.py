@@ -40,7 +40,7 @@ def user_creation(email, password):
         error_response = ErrorResponse('NotCorrectFormatError', 'user')
         logger.error('Incorrect format')
         return Response(error_response.code, error_response.toJson())
-    except:
+    except Exception:
         error_response = ErrorResponse('CreatingUserError', 'user')
         logger.error('Database error')
         return Response(error_response.code, error_response.toJson())

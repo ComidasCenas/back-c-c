@@ -27,14 +27,14 @@ def get_user_by_id(user_id):
         )
     except UserNotFoundError:
         error_response = ErrorResponse('UserNotFoundError', 'user')
-        logger.warning(f'The user with id {user_id} has not been found')
+        logger.error(f'The user with id {user_id} has not been found')
         return Response(
             user_errors['UserNotFoundError']['status'],
             Message(user_errors['UserNotFoundError']['message'])
         )
-    except GettingUserError:
+    except Exception:
         error_response = ErrorResponse('GettingUserError', 'user')
-        logger.warning('There was an error while getting the user')
+        logger.error('There was an error while getting the user')
         return Response(
             user_errors['CreatingUserError']['status'],
             Message(user_errors['CreatingUserError']['message']).toJson()
