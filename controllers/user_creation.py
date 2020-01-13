@@ -13,29 +13,34 @@ def user_creation(email, password):
     logger = Logger('user_creation::controller::flask')
     logger.debug('Creating user')
     try:
+        logger.debug('Instantiating user entity')
         user = User(email, password)
 
+        logger.debug('Validating')
         if not user_facade.creation_validation(user):
             raise NotCorrectFormatError
+        logger.debug('Searching email')
         if UserModel.find_by_email(email):
             raise UserAlreadyExistsError
 
+        logger.debug('Instantiating user model')
         user = UserModel(email, password)
 
+        logger.debug('Saving user')
         user.save()
         return Response(
             user_errors['UserCreationSuccess']['status'],
             Message(user_errors['UserCreationSuccess']['message']).toJson()
         )
     except UserAlreadyExistsError:
-        error_response = ErrorResponse('UserAlreadyExistsError', user)
+        error_response = ErrorResponse('UserAlreadyExistsError', 'user')
         logger.warning('User already exists')
         return Response(error_response.code, error_response.toJson())
     except NotCorrectFormatError:
-        error_response = ErrorResponse('NotCorrectFormatError', user)
+        error_response = ErrorResponse('NotCorrectFormatError', 'user')
         logger.error('Incorrect format')
         return Response(error_response.code, error_response.toJson())
     except Exception:
-        error_response = ErrorResponse('CreatingUserError', user)
+        error_response = ErrorResponse('CreatingUserError', 'user')
         logger.error('Database error')
         return Response(error_response.code, error_response.toJson())
