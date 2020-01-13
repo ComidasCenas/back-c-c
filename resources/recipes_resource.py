@@ -20,6 +20,7 @@ class Recipe(Resource):
                         help='This field cannot be empty'
                         )
 
+    @http_response_decorator
     def get(self, name):
         logger = Logger('get::recipe::resouces::flask')
         logger.debug('Starting recipe query')

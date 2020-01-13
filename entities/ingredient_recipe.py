@@ -1,3 +1,7 @@
+from helpers.serializable_decorator import serializable
+
+
+@serializable
 class IngredientRecipe():
     def __init__(self, quantity, recipe_id, name):
         self.quantity = quantity

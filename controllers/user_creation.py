@@ -1,3 +1,4 @@
+import traceback
 from models.user_model import UserModel
 from entities.response import Response
 from entities.messages import Message
@@ -30,17 +31,18 @@ def user_creation(email, password):
         user.save()
         return Response(
             user_errors['UserCreationSuccess']['status'],
-            Message(user_errors['UserCreationSuccess']['message']).toJson()
+            Message(user_errors['UserCreationSuccess']['message'])
         )
     except UserAlreadyExistsError:
         error_response = ErrorResponse('UserAlreadyExistsError', 'user')
         logger.warning('User already exists')
-        return Response(error_response.code, error_response.toJson())
+        return Response(error_response.code, error_response)
     except NotCorrectFormatError:
         error_response = ErrorResponse('NotCorrectFormatError', 'user')
         logger.error('Incorrect format')
-        return Response(error_response.code, error_response.toJson())
+        return Response(error_response.code, error_response)
     except Exception:
+        stacktrace = traceback.format_exc()
         error_response = ErrorResponse('CreatingUserError', 'user')
-        logger.error('Database error')
-        return Response(error_response.code, error_response.toJson())
+        logger.error('Error: ' + stacktrace)
+        return Response(error_response.code, error_response)

@@ -1,9 +1,9 @@
-import json
-
 from errors.user_errors import user_errors
 from errors.recipe_errors import recipe_errors
+from helpers.serializable_decorator import serializable
 
 
+@serializable
 class ErrorResponse():
     def __init__(self, type_error, domain):
         type_errors_dic = {
@@ -12,6 +12,3 @@ class ErrorResponse():
         }
         self.error = type_errors_dic[domain][type_error]['message']
         self.code = type_errors_dic[domain][type_error]['status']
-
-    def toJson(self):
-        return json.dumps(self.__dict__, indent=4, sort_keys=True)

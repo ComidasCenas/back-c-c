@@ -23,7 +23,7 @@ def get_user_by_id(user_id):
 
         return Response(
             user_errors['UserFoundSucces']['status'],
-            user_entity.to_json()
+            user_entity
         )
     except UserNotFoundError:
         error_response = ErrorResponse('UserNotFoundError', 'user')
@@ -37,5 +37,5 @@ def get_user_by_id(user_id):
         logger.error('There was an error while getting the user')
         return Response(
             user_errors['CreatingUserError']['status'],
-            Message(user_errors['CreatingUserError']['message']).toJson()
+            Message(user_errors['CreatingUserError']['message'])
         )

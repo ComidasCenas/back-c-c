@@ -50,17 +50,19 @@ def recipes_creation(recipe_request, user_id):
 
         return Response(
             recipe_errors['RecipeCreationSuccess']['status'],
-            Message(recipe_errors['RecipeCreationSuccess']['message']).toJson()
+            Message(
+                recipe_errors['RecipeCreationSuccess']['message']
+                )
         )
 
     except NotCorrectFormatError:
         error_response = ErrorResponse('NotCorrectFormatError', 'recipe')
         logger.warning('The recipe has not a correct format')
-        return Response(error_response.code, error_response.toJson())
+        return Response(error_response.code, error_response)
     except CreatingRecipeError:
         error_response = ErrorResponse('CreatingRecipeError', 'recipe')
         logger.error('Database error')
-        return Response(error_response.code, error_response.toJson())
+        return Response(error_response.code, error_response)
 
         # 1. Comprobar si los datos de la receta son validos (hay que crear
         # un facade)
