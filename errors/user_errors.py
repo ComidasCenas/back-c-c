@@ -4,7 +4,7 @@ user_errors = {
         'status': 200
     },
     'UserCreationSuccess': {
-        'message': 'The user has been crated successfully',
+        'message': 'The user has been created successfully',
         'status': 201
     },
     'NotCorrectFormatError': {

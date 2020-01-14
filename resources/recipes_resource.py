@@ -3,6 +3,7 @@ import flask
 from flask_restful import Resource, reqparse
 
 from controllers.recipes_creation import recipes_creation
+from helpers.http_response_decorator import http_response
 from logs import Logger
 from models.recipe_model import RecipeModel
 
@@ -20,7 +21,7 @@ class Recipe(Resource):
                         help='This field cannot be empty'
                         )
 
-    @http_response_decorator
+    @http_response
     def get(self, name):
         logger = Logger('get::recipe::resouces::flask')
         logger.debug('Starting recipe query')
