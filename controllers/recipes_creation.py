@@ -52,7 +52,7 @@ def recipes_creation(recipe_request, user_id):
             recipe_errors['RecipeCreationSuccess']['status'],
             Message(
                 recipe_errors['RecipeCreationSuccess']['message']
-                )
+            )
         )
 
     except NotCorrectFormatError:
