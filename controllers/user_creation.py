@@ -15,11 +15,12 @@ def user_creation(email, password):
     logger.debug('Creating user')
     try:
         logger.debug('Instantiating user entity')
-        user = User(email, password)
+        user = User(email, password=password)
 
         logger.debug('Validating')
         if not user_facade.creation_validation(user):
             raise NotCorrectFormatError
+
         logger.debug('Searching email')
         if UserModel.find_by_email(email):
             raise UserAlreadyExistsError
