@@ -2,6 +2,13 @@ from db import db
 
 from logs import Logger
 
+recipes_relationship = db.Table(
+    'RecipeChild',
+    db.Column('recipe_relation_id', db.Integer, primary_key=True),
+    db.Column('parent_recipe_id', db.Integer, db.ForeignKey('recipes.id')),
+    db.Column('child_recipe_id', db.Integer, db.ForeignKey('recipes.id'))
+)
+
 
 class RecipeModel(db.Model):
     __tablename__ = 'recipes'
@@ -10,12 +17,13 @@ class RecipeModel(db.Model):
     name = db.Column(db.String(30))
     instructions = db.Column(db.String(300))
     photo = db.Column(db.BLOB)
-    recipe_child = db.Column(db.Integer, db.ForeignKey('recipes.id'))
-    child_recipes = db.relationship(
-        'RecipeModel',
-        remote_side=[id],
-        backref='related_recipe',
-        uselist=False
+
+    parent_recipe = db.relationship(
+        'recipes',
+        secondary=recipes_relationship,
+        primaryjoin=id == recipes_relationship.c.child_recipe_id,
+        secondaryjoin=id == recipes_relationship.c.parent_recipe_id,
+        backref='child_recipe'
     )
 
     ingredients = db.relationship(
