@@ -1,3 +1,6 @@
+import re
+
+
 class RecipeFacade():
     def recipe_creation_validation(self, recipe):
         valid = self._name_validation(recipe.name)
@@ -6,20 +9,32 @@ class RecipeFacade():
         return valid
 
     def _name_validation(self, name):
-        if name:
-            return True
+        if type(name) != str:
+            return False
+        if len(name) < 1:
+            return False
+        return True
 
     def _ingredients_validation(self, ingredients):
         if len(ingredients) >= 1:
-            return True
+            return False
+        # TODO
+
+        return True
 
     def _instruction_validation(self, instructions):
-        if instructions:
-            return True
+        if type(instructions) != str:
+            return False
+        if len(instructions) < 1:
+            return False
+        return True
 
     def _photo_validation(self, photo):
-        if photo:
-            return True
+        regex = r'^data:image\/.*'
+        if re.match(regex, photo):
+            result = True
+
+        return result
 
 
 recipe_facade = RecipeFacade()
