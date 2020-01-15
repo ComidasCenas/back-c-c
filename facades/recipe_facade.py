@@ -18,7 +18,10 @@ class RecipeFacade():
     def _ingredients_validation(self, ingredients):
         if len(ingredients) >= 1:
             return False
-        # TODO
+        # TODO:
+        # Evaluar que en cada elemento del listado hay un campo nombre y un campo cantidad
+        # Nombre: string no vacío
+        # Cantidad: string no vacío con al menos dos palabras (espacio en blanco)
 
         return True
 
