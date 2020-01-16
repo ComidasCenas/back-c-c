@@ -16,14 +16,18 @@ class RecipeFacade():
         return True
 
     def _ingredients_validation(self, ingredients):
-        if len(ingredients) >= 1:
-            return False
-        # TODO:
-        # Evaluar que en cada elemento del listado hay un campo nombre y un campo cantidad
-        # Nombre: string no vacío
-        # Cantidad: string no vacío con al menos dos palabras (espacio en blanco)
+        regex = r'(\w+\s\w+)'
+        for ingredient in ingredients:
+            if ingredient.get('name') == None or ingredient.get('quantity') == None:
+                return False
+            if type(ingredient['name']) != str or len(ingredient['name']) < 1:
+                return False
+            if type(ingredient['quantity']) != str or len(ingredient['quantity']) < 1:
+                return False
+            if not re.match(regex, item['quantity']):
+                return False
 
-        return True
+            return True
 
     def _instruction_validation(self, instructions):
         if type(instructions) != str:
