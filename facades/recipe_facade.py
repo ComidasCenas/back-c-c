@@ -8,11 +8,14 @@ class RecipeFacade():
         valid = valid and self._instruction_validation(recipe.instructions)
         return valid
 
-    def _name_validation(self, name):
+    def _validates_string_exists(self, to_validate):
         if type(name) != str:
             return False
         if len(name) < 1:
             return False
+
+    def _name_validation(self, name):
+        _validates_string_exists(name)
         return True
 
     def _ingredients_validation(self, ingredients):
@@ -20,20 +23,15 @@ class RecipeFacade():
         for ingredient in ingredients:
             if ingredient.get('name') == None or ingredient.get('quantity') == None:
                 return False
-            if type(ingredient['name']) != str or len(ingredient['name']) < 1:
-                return False
-            if type(ingredient['quantity']) != str or len(ingredient['quantity']) < 1:
-                return False
+            _validates_string_exists(ingredient['name'])
+            _validates_string_exists(ingredient['quantity'])
             if not re.match(regex, item['quantity']):
                 return False
 
             return True
 
     def _instruction_validation(self, instructions):
-        if type(instructions) != str:
-            return False
-        if len(instructions) < 1:
-            return False
+        _validates_string_exists(instructions)
         return True
 
     def _photo_validation(self, photo):
