@@ -6,16 +6,15 @@ from entities.error_response import ErrorResponse
 from errors.user_errors import user_errors, UserAlreadyExistsError
 from errors.user_errors import NotCorrectFormatError, CreatingUserError
 from facades.user_facade import user_facade
-from entities.user_entity import User
 from logs import Logger
 
 
-def user_creation(email, password):
+def user_creation(email, password, User):
     logger = Logger('user_creation::controller::flask')
     logger.debug('Creating user')
     try:
         logger.debug('Instantiating user entity')
-        user = User(email, password=password)
+        user = User(email, password)
 
         logger.debug('Validating')
         if not user_facade.creation_validation(user):

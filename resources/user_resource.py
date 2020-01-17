@@ -32,8 +32,10 @@ class UserRegister(Resource):
         logger.debug('Posting user registration')
         # La auth de la app
         data = _user_parser.parse_args()
+        email = data.get('email')
+        password = data.get('password')
 
-        return user_creation(**data)
+        return user_creation(email, password, User)
 
 
 class UserFinder(Resource):
