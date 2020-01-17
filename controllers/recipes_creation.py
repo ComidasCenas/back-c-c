@@ -80,3 +80,14 @@ def recipes_creation(recipe_request, user_id):
         # 5. Hay que salvar la relación entre los ingredientes y la receta
         # mediante el modelo
         #    IngredientsRecipesModel añadiendo la cantidad de cada ingrediente
+
+
+
+####### CODIGO DE EJEMPLO DE TDD ########
+
+class RecipeCreation:
+    def __init__(self, db_library):
+        self.db_library = db_library
+
+    def create_recipe(self, recipe):
+        self.db_library.save(recipe)

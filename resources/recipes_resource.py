@@ -38,6 +38,12 @@ class Recipe(Resource):
         # return recipe.json()
         return None
 
+    def post(self):
+        parseador = reqparse.RequestParser()
+        data = parseador.parse_args()
+        
+        return data
+
 
 class RecipesList(Resource):
 

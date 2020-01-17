@@ -37,7 +37,7 @@ logger.debug('Creating routes')
 api.add_resource(UserRegister, '/user')
 api.add_resource(UserLogin, '/login')  # previous /auth
 api.add_resource(UserFinder, '/user/<int:user_id>')
-api.add_resource(Recipe, '/recipe/<string:name>')
+api.add_resource(Recipe, '/recipe')
 api.add_resource(RecipesList, '/recipes')
 api.add_resource(TokenRefresh, '/refresh')
 
