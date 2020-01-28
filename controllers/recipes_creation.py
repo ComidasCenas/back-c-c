@@ -23,9 +23,16 @@ from models.recipe_model import RecipeModel
 def recipes_creation(recipe_request, user_id):
     logger = Logger('recipe_creation::controller::flask')
     logger.debug('Creating recipe')
+
+    # Comprobar que el usuario existe por email
+    # Comprobar si la receta ya existe (facade y bdd)
+    # Comprobar que el nombre de la receta es válido (facade y bdd)
+    # Comprobar si las recetas relacionadas existen (facade y bdd)
+    # Comprobar si los ingredientes existen (facade y bdd)
+
     try:
 
-        recipe_entity = Recipe(recipe_request)
+        recipe_entity = Recipe(recipe_request, user_id)
 
         if not recipe_facade.recipe_creation_validation(recipe_entity):
             raise NotCorrectFormatError
