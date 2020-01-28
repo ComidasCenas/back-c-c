@@ -5,6 +5,8 @@ from sqlalchemy.orm import sessionmaker
 
 from models.user_model import UserModel
 from models.recipe_model import RecipeModel
+from models.ingredients_recipes_model import IngredientsRecipesModel
+from models.ingredients_model import IngredientsModel
 from db import db
 
 
@@ -26,4 +28,5 @@ class TestUserModel (unittest.TestCase):
 
     def test_user_creation(self):
         result = self.session.query(UserModel).all()
-        self.assertEqual(True, True)
+        self.assertEqual(result[0].email, self.email)
+        self.assertEqual(result[0].password, self.password)

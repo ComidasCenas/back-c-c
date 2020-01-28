@@ -19,7 +19,7 @@ class RecipeModel(db.Model):
     photo = db.Column(db.BLOB)
 
     parent_recipe = db.relationship(
-        'recipes',
+        'RecipeModel',
         secondary=recipes_relationship,
         primaryjoin=id == recipes_relationship.c.child_recipe_id,
         secondaryjoin=id == recipes_relationship.c.parent_recipe_id,
