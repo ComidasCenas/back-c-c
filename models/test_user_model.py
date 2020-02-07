@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch, MagicMock
+from flask import Flask
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -14,22 +15,28 @@ from logs import Logger
 
 class TestUserModel (unittest.TestCase):
 
-    engine = create_engine('sqlite:///:memory:')
-    Session = sessionmaker(bind=engine)
-    session = Session()
     email = 'pepe@mail.com'
     password = '1234'
 
+    def create_test_app(self):
+        app = Flask(__name__)
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        db.init_app(app)
+        app.app_context().push()
+
     def setUp(self):
-        db.metadata.create_all(self.engine)
+        self.create_test_app()
+        db.create_all()
 
     def tearDown(self):
-        db.metadata.drop_all(self.engine)
+        db.session.remove()
+        db.drop_all()
 
     def test_user_creation(self):
-        self.session.add(UserModel(self.email, self.password))
-        self.session.commit()
-        result = self.session.query(UserModel).all()
+        db.session.add(UserModel(self.email, self.password))
+        db.session.commit()
+        result = db.session.query(UserModel).all()
         self.assertEqual(result[0].email, self.email)
         self.assertEqual(result[0].password, self.password)
 
@@ -59,3 +66,11 @@ class TestUserModel (unittest.TestCase):
             mockCommit.call_count,
             1
         )
+
+    @patch('logs.Logger.__init__', lambda x, y: None)
+    @patch('logs.Logger.debug', autospec=True)
+    @patch('models.user_model.UserModel.query.filter_by', autospec=True)
+    @patch('models.user_model.UserModel.query.first', autospec=True)
+    def test_user_find_by_email(self, mockFirst, mockFilterBy, mockDebug):
+        userModel = UserModel(self.email, self.password)
+        userModel.find_by_email(self.email)
