@@ -69,8 +69,19 @@ class TestUserModel (unittest.TestCase):
 
     @patch('logs.Logger.__init__', lambda x, y: None)
     @patch('logs.Logger.debug', autospec=True)
-    @patch('models.user_model.UserModel.query.filter_by', autospec=True)
-    @patch('models.user_model.UserModel.query.first', autospec=True)
+    @patch('db.db.Query.filter_by', autospec=True)
+    @patch('db.db.Query.first', autospec=True)
     def test_user_find_by_email(self, mockFirst, mockFilterBy, mockDebug):
+        class MockQueryFirst():
+            def first(self):
+                mockFirst.call_count = 1
+
+        mockFilterBy.return_value = MockQueryFirst()
         userModel = UserModel(self.email, self.password)
         userModel.find_by_email(self.email)
+
+        self.assertEqual(mockDebug.call_args[0][1], 'Searching user by email')
+
+        self.assertEqual(mockFilterBy.call_args[1]['email'], self.email)
+
+        self.assertEqual(mockFirst.call_count, 1)
