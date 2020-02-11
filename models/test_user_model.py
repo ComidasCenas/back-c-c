@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from flask import Flask
 
 from sqlalchemy import create_engine
@@ -118,3 +118,11 @@ class TestUserModel(unittest.TestCase):
         user_deleted = mocked_deletion.call_args[0][0]
 
         self.assertEqual(mocked_commit.call_count, 1)
+
+    def test_repr_method(self):
+        user_model = UserModel(self.email, self.password)
+        result = user_model.__repr__()
+
+        expected = 'User: pepe@mail.com'
+
+        self.assertEqual(result, expected)
