@@ -119,6 +119,8 @@ class TestUserModel(unittest.TestCase):
 
         self.assertEqual(mocked_commit.call_count, 1)
 
+        self.assertEqual(user_deleted, user_model)
+
     def test_repr_method(self):
         user_model = UserModel(self.email, self.password)
         result = user_model.__repr__()
