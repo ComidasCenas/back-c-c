@@ -28,7 +28,7 @@ class UserModel(db.Model):
     @classmethod
     def find_by_email(cls, email):
         logger = Logger('findbyemail::usermodel::models::flask')
-        logger.debug('Searchin user by email')
+        logger.debug('Searching user by email')
         return cls.query.filter_by(email=email).first()
 
     @classmethod
