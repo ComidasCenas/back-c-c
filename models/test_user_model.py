@@ -22,6 +22,7 @@ class TestUserModel(unittest.TestCase):
         app = Flask(__name__)
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db.init_app(app)
         app.app_context().push()
 
