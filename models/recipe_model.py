@@ -33,10 +33,10 @@ class RecipeModel(db.Model):
     )
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def __init__(self, recipe_entity):
+    def __init__(self, recipe_entity):  # parámetro de entrada entidad receta
         self.name = recipe_entity.name
         self.instructions = recipe_entity.instructions
-        self.user_id = recipe_entity.user_id
+        self.user_id = recipe_entity.user
         self.photo = recipe_entity.photo
 
     @classmethod

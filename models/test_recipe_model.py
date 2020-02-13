@@ -16,15 +16,35 @@ from models.user_model import UserModel
 
 class TestRecipeModel(TestCase):
 
-    name = 'Bizcocho'
-    instructions = 'Se te ha quemado'
-    user_id = 1
-    photo = 'foto del bizcocho quemado'
+    recipe_post = {
+        'name': 'bizcocho',
+        'relatedRecipes': [],
+        'ingredients': [
+            {
+                'name': 'harina',
+                'quantity': '200 gr'
+            },
+            {
+                'name': 'huevos',
+                'quantity': '3'
+            },
+            {
+                'name': 'azucar',
+                'quantity': '90 gr'
+            },
+        ],
+        'recipeSteps': 'mezcla los ingrdientes y al horno',
+        'photo': b'se ha quemado mucho'
+    }
+
+    email = 'pepe@mail.com'
+    password = '1234'
 
     def create_test_app(self):
         app = Flask(__name__)
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db.init_app(app)
         app.app_context().push()
 
@@ -32,15 +52,98 @@ class TestRecipeModel(TestCase):
         self.create_test_app()
         db.create_all()
 
+        db.session.add(UserModel(self.email, self.password))
+        db.session.commit()
+        user_test = db.session.query(UserModel).first()
+
+        recipe_test = Recipe(self.recipe_post, user_test.id)
+
     def tearDown(self):
         db.session.remove()
         db.drop_all()
 
     def test_recipe_creation(self):
-        db.session.add(RecipeModel())
-        db.session.commit()  # Por qué este commit no se mockea?
+        db.session.add(UserModel(self.email, self.password))
+        db.session.commit()
+        user_test = db.session.query(UserModel).first()
+
+        recipe_test = Recipe(self.recipe_post, user_test.id)
+
+        db.session.add(RecipeModel(recipe_test))
+        db.session.commit()
+
         result = db.session.query(RecipeModel).all()
-        self.assertEqual(result[0].name, self.name)
-        self.assertEqual(result[0].instructions, self.instructions)
-        self.assertEqual(result[0].user_id, self.user_id)
-        self.assertEqual(result[0].photo, self.photo)
+
+        self.assertEqual(result[0].name, self.recipe_post.get('name'))
+        self.assertEqual(result[0].instructions,
+                         self.recipe_post.get('recipeSteps'))
+        self.assertEqual(result[0].user_id, user_test.id)
+        self.assertEqual(result[0].photo, self.recipe_post.get('photo'))
+
+    @patch('logs.Logger.__init__', lambda x, y: None)
+    @patch('logs.Logger.debug', autospec=True)
+    @patch('db.db.session.add', autospec=True)
+    @patch('db.db.session.commit', autospec=True)
+    def test_recipe_save(self, mocked_commit, mocked_add, mocked_debug):
+        db.session.add(UserModel(self.email, self.password))
+        db.session.commit()
+        user_test = db.session.query(UserModel).first()
+
+        recipe_test = Recipe(self.recipe_post, user_test.id)
+
+        recipe_model = RecipeModel(recipe_test)
+
+        recipe_model.save()
+
+        self.assertEqual(
+            mocked_debug.call_args[0][1], 'Recipe saved in database')
+
+    @patch('logs.Logger.__init__', lambda x, y: None)
+    @patch('logs.Logger.debug', autospec=True)
+    @patch('db.db.Query.filter_by', autospec=True)
+    @patch('db.db.Query.first', autospec=True)
+    def test_find_recipe_by_name(self, mocked_first, mocked_filter, mocked_debug):
+        db.session.add(UserModel(self.email, self.password))
+        db.session.commit()
+        user_test = db.session.query(UserModel).first()
+
+        recipe_test = Recipe(self.recipe_post, user_test.id)
+
+        recipe_model = RecipeModel(recipe_test)
+
+        recipe_model.find_by_name(recipe_model.name)
+
+        self.assertEqual(
+            mocked_debug.call_args[0][1], 'Searchin recipe by name')
+
+        self.assertEqual(
+            mocked_filter.call_args[1]['name'], self.recipe_post.get('name'))
+        # print('-----------------------------------------')
+        # print('mocked_filter.call_args[1]', mocked_filter.call_args[1])
+        # print('-----------------------------------------')
+
+        self.assertEqual(mocked_first.call_count, 1)
+
+    @patch('logs.Logger.__init__', lambda x, y: None)
+    @patch('logs.Logger.debug', autospec=True)
+    @patch('db.db.session.delete', autospec=True)
+    @patch('db.db.session.commit', autospec=True)
+    def test_delete_recipe(self, mocked_commit, mocked_deletion, mocked_debug):
+        db.session.add(UserModel(self.email, self.password))
+        db.session.commit()
+        user_test = db.session.query(UserModel).first()
+
+        recipe_test = Recipe(self.recipe_post, user_test.id)
+
+        recipe_model = RecipeModel(recipe_test)
+
+        recipe_model.delete()
+
+        self.assertEqual(
+            mocked_debug.call_args[0][1], 'Recipe deleted from database')
+
+        self.assertEqual(mocked_commit.call_count, 2)
+
+        recipe_deleted = mocked_deletion.call_args[0][0]
+
+        self.assertEqual(recipe_deleted, recipe_model)

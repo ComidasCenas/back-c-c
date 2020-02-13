@@ -22,6 +22,7 @@ class TestUserModel(unittest.TestCase):
         app = Flask(__name__)
         app.config['TESTING'] = True
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         db.init_app(app)
         app.app_context().push()
 
@@ -52,6 +53,11 @@ class TestUserModel(unittest.TestCase):
             mock_debug.call_args[0][1],
             'Starting save user in database'
         )
+        # print('-----------------------------------------')
+        # print('mock_debug.call_args[0][1]', mock_debug.call_args[0][1])
+        # print('mock_debug.call_args[0]', mock_debug.call_args[0])
+        # print('mock_add.call_args[0][0]', mock_add.call_args[0][0])
+        # print('-----------------------------------------')
         user_saved = mock_add.call_args[0][0]
 
         self.assertEqual(
@@ -83,6 +89,11 @@ class TestUserModel(unittest.TestCase):
         self.assertEqual(mock_debug.call_args[0][1], 'Searching user by email')
 
         self.assertEqual(mock_filter_by.call_args[1]['email'], self.email)
+        # print('-----------------------------------------')
+        # print('mock_filter_by.call_args[1]', mock_filter_by.call_args[1])
+        # print('mock_filter_by.call_args[1]["email"]',
+        #       mock_filter_by.call_args[1]['email'])
+        # print('-----------------------------------------')
 
         self.assertEqual(mock_first.call_count, 1)
 
