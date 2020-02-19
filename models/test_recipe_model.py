@@ -98,6 +98,19 @@ class TestRecipeModel(TestCase):
         self.assertEqual(
             mocked_debug.call_args[0][1], 'Recipe saved in database')
 
+        recipe_saved = mocked_add.call_args[0][0]
+
+        self.assertEqual(recipe_saved.name, self.recipe_post.get('name'))
+        self.assertEqual(recipe_saved.instructions,
+                         self.recipe_post.get('recipeSteps'))
+        self.assertEqual(recipe_saved.user_id, user_test.id)
+        self.assertEqual(recipe_saved.photo, self.recipe_post.get('photo'))
+
+        self.assertEqual(
+            mocked_commit.call_count,
+            2
+        )
+
     @patch('logs.Logger.__init__', lambda x, y: None)
     @patch('logs.Logger.debug', autospec=True)
     @patch('db.db.Query.filter_by', autospec=True)
